@@ -179,7 +179,6 @@ class Search extends PureComponent {
 
   expandAnimation = () => {
     return new Promise((resolve, reject) => {
-      debugger
       Animated.parallel([
         Animated.timing(this.inputFocusWidthAnimated, {
           toValue: this.contentWidth - this.cancelButtonWidth,
