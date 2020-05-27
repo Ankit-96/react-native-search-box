@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
-const containerHeight = 40;
 
 class Search extends PureComponent {
   constructor(props) {
@@ -60,7 +59,7 @@ class Search extends PureComponent {
      */
     this.placeholder = this.props.placeholder || 'Search';
     this.cancelTitle = this.props.cancelTitle || 'Cancel';
-    this.autoFocus =  this.props.autoFocus || false;
+    this.autoFocus = this.props.autoFocus || false;
 
     /**
      * Shadow
@@ -72,9 +71,9 @@ class Search extends PureComponent {
   }
 
   componentDidMount() {
-    if(this.autoFocus) {
-      this.setState({expanded: true})
-      this.refs.input_keyword._component.focus();
+    if (this.autoFocus) {
+      this.setState({ expanded: true })
+      this.refs.input_keyword.focus();
 
     }
   }
@@ -127,8 +126,8 @@ class Search extends PureComponent {
    */
   onFocus = async () => {
     this.props.beforeFocus && (await this.props.beforeFocus());
-    this.refs.input_keyword._component.isFocused &&
-      (await this.refs.input_keyword._component.focus());
+    this.refs.input_keyword.isFocused &&
+      (await this.refs.input_keyword.focus());
     await this.setState(prevState => {
       return { expanded: !prevState.expanded };
     });
@@ -143,7 +142,7 @@ class Search extends PureComponent {
    */
   focus = async (text = '') => {
     await this.setState({ keyword: text });
-    await this.refs.input_keyword._component.focus();
+    await this.refs.input_keyword.focus();
   };
 
   /**
@@ -180,6 +179,7 @@ class Search extends PureComponent {
 
   expandAnimation = () => {
     return new Promise((resolve, reject) => {
+      debugger
       Animated.parallel([
         Animated.timing(this.inputFocusWidthAnimated, {
           toValue: this.contentWidth - this.cancelButtonWidth,
@@ -225,15 +225,15 @@ class Search extends PureComponent {
         }).start(),
         this.props.keyboardShouldPersist === false
           ? Animated.timing(this.inputFocusPlaceholderAnimated, {
-              toValue: this.middleWidth - this.props.placeholderCollapsedMargin,
-              duration: 200
-            }).start()
+            toValue: this.middleWidth - this.props.placeholderCollapsedMargin,
+            duration: 200
+          }).start()
           : null,
         this.props.keyboardShouldPersist === false || isForceAnim === true
           ? Animated.timing(this.iconSearchAnimated, {
-              toValue: this.middleWidth - this.props.searchIconCollapsedMargin,
-              duration: 200
-            }).start()
+            toValue: this.middleWidth - this.props.searchIconCollapsedMargin,
+            duration: 200
+          }).start()
           : null,
         Animated.timing(this.iconDeleteAnimated, {
           toValue: 0,
@@ -264,6 +264,7 @@ class Search extends PureComponent {
         onLayout={this.onLayout}
       >
         <AnimatedTextInput
+          useNativeDriver
           ref="input_keyword"
           style={[
             styles.input,
@@ -309,13 +310,13 @@ class Search extends PureComponent {
           accessibilityTraits="search"
         />
         <TouchableWithoutFeedback onPress={this.onFocus}>
-        {this.props.iconSearch
-          ? <Animated.View
+          {this.props.iconSearch
+            ? <Animated.View
               style={[styles.iconSearch, { left: this.iconSearchAnimated }]}
             >
               {this.props.iconSearch}
             </Animated.View>
-          : <Animated.Image
+            : <Animated.Image
               source={require('./img/search.png')}
               style={[
                 styles.iconSearch,
@@ -328,34 +329,34 @@ class Search extends PureComponent {
                 }
               ]}
             />}
-          </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
         {this.props.useClearButton && <TouchableWithoutFeedback onPress={this.onDelete}>
           {this.props.iconDelete
             ? <Animated.View
-                style={[
-                  styles.iconDelete,
-                  this.props.positionRightDelete && {
-                    [isRtl ? 'left' : 'right']: this.props.positionRightDelete
-                  },
-                  { opacity: this.iconDeleteAnimated }
-                ]}
-              >
-                {this.props.iconDelete}
-              </Animated.View>
+              style={[
+                styles.iconDelete,
+                this.props.positionRightDelete && {
+                  [isRtl ? 'left' : 'right']: this.props.positionRightDelete
+                },
+                { opacity: this.iconDeleteAnimated }
+              ]}
+            >
+              {this.props.iconDelete}
+            </Animated.View>
             : <Animated.Image
-                source={require('./img/delete.png')}
-                style={[
-                  styles.iconDelete,
-                  styles.iconDeleteDefault,
-                  this.props.tintColorDelete && {
-                    tintColor: this.props.tintColorDelete
-                  },
-                  this.props.positionRightDelete && {
-                    [isRtl ? 'left' : 'right']: this.props.positionRightDelete
-                  },
-                  { opacity: this.iconDeleteAnimated }
-                ]}
-              />}
+              source={require('./img/delete.png')}
+              style={[
+                styles.iconDelete,
+                styles.iconDeleteDefault,
+                this.props.tintColorDelete && {
+                  tintColor: this.props.tintColorDelete
+                },
+                this.props.positionRightDelete && {
+                  [isRtl ? 'left' : 'right']: this.props.positionRightDelete
+                },
+                { opacity: this.iconDeleteAnimated }
+              ]}
+            />}
         </TouchableWithoutFeedback>}
 
         <TouchableOpacity onPress={this.onCancel}>
@@ -389,19 +390,19 @@ class Search extends PureComponent {
 const getStyles = (inputHeight, isRtl) => {
   let middleHeight = 20
   if (typeof inputHeight == 'number')
-  middleHeight = (10 + inputHeight) / 2;
+    middleHeight = (10 + inputHeight) / 2;
 
   return {
     container: {
       backgroundColor: 'grey',
-      height: containerHeight,
+      height: inputHeight + 10,
       flexDirection: isRtl ? 'row-reverse' : 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',
       padding: 5
     },
     input: {
-      height: containerHeight - 10,
+      height: inputHeight,
       paddingTop: 5,
       paddingBottom: 5,
       [isRtl ? 'paddingRight' : 'paddingLeft']: 20,
