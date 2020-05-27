@@ -4,6 +4,7 @@
 - Support both iOS/Android devices
 - Support vertical, horizontal layout
 - Shadow invisible by default
+- Support for RN 0.62
 
 ## Install
 ```
